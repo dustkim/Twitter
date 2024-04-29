@@ -1,4 +1,5 @@
 import express from 'express';
+import * as tweetController from '../controler/tweet.js';
 
 const router = express.Router();
 
@@ -28,13 +29,14 @@ let tweets = [
 // GET
 // http://localhost:8080/tweets?username=:username
 
-router.get('/', (req, res, next) => {
-    const username = req.query.username;
-    const data = username 
-    ? tweets.filter((UserNM) => UserNM.username == username)
-    : tweets;
-    res.status(200).json(data);
-});
+router.get('/', tweetController.getTweets);
+// (req, res, next) => {
+//     const username = req.query.username;
+//     const data = username 
+//     ? tweets.filter((UserNM) => UserNM.username == username)
+//     : tweets;
+//     res.status(200).json(data);
+// }
 
 
 
@@ -42,16 +44,17 @@ router.get('/', (req, res, next) => {
 // GET
 // http://localhost:8080/tweets/:id
 
-router.get('/:id', (req, res, next) => {
-    const id = req.params.id;
-    const tweet = tweets.find((ID) => ID.id === id);
-    if(tweet){
-        res.status(200).json(tweet);
-    }
-    else{
-        res.status(404).json({message: `${id}의 트윗이 없습니다.`})
-    }
-});
+router.get('/:id', tweetController.getTweet);
+// (req, res, next) => {
+//     const id = req.params.id;
+//     const tweet = tweets.find((ID) => ID.id === id);
+//     if(tweet){
+//         res.status(200).json(tweet);
+//     }
+//     else{
+//         res.status(404).json({message: `${id}의 트윗이 없습니다.`})
+//     }
+// };
 
 
 
@@ -61,19 +64,20 @@ router.get('/:id', (req, res, next) => {
 // name, username, text
 // json 형태로 입력 후 추가된 데이터까지 모두 json으로 출력
 
-router.post('/', (req, res, next) => {
-    const { text, name, username } = req.body;
-    const tweet = {
-        id: '10',
-        text: text,
-        createAt: Date.now().toString(),
-        name: name,
-        username: username,
-        url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45.jpg'
-    };
-    tweets = [tweet, ...tweets];
-    res.status(201).json(tweets);
-});
+router.post('/', tweetController.createTweet);
+// (req, res, next) => {
+//     const { text, name, username } = req.body;
+//     const tweet = {
+//         id: '10',
+//         text: text,
+//         createAt: Date.now().toString(),
+//         name: name,
+//         username: username,
+//         url: 'https://www.logoyogo.com/web/wp-content/uploads/edd/2021/02/logoyogo-1-45.jpg'
+//     };
+//     tweets = [tweet, ...tweets];
+//     res.status(201).json(tweets);
+// };
 
 
 
@@ -83,7 +87,8 @@ router.post('/', (req, res, next) => {
 // id, username, text
 // json 형태로 입력 후 변경된 데이터까지 모두 json으로 출력
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', tweetController.updateTweet);
+(req, res, next) => {
     const id = req.params.id;
     const text = req.body.text;
     const tweet = tweets.find((tweet) => tweet.id === id);
@@ -94,7 +99,7 @@ router.put('/:id', (req, res, next) => {
     else{
         res.status(404).json({message: `${id}의 트윗이 없습니다.`})
     }
-});
+};
 
 
 
@@ -102,11 +107,12 @@ router.put('/:id', (req, res, next) => {
 // DELETE
 // http://localhost:8080/tweets/:id
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', tweetController.deleteTweet);
+(req, res, next) => {
     const id = req.params.id;
     tweets = tweets.filter((tweet) => tweet.id !== id);
     res.sendStatus(204);
-});
+};
 
 
 
