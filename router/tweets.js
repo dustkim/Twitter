@@ -1,7 +1,18 @@
 import express from 'express';
 import * as tweetController from '../controler/tweet.js';
+import { body } from 'express-validator';
+import { validate } from '../middleware/validator.js';
 
 const router = express.Router();
+
+
+/*
+    Post, Put에 text에 대해 빈 문자열을 없애고, 최소 3자 이상 입력해야 데이터를 저장하도록 API에 적용
+*/
+const validateTweet = [
+    body('text').trim().isLength({min:3}).withMessage('최소 3자 이상 입력'), validate
+]
+
 
 let tweets = [
     {
@@ -64,7 +75,7 @@ router.get('/:id', tweetController.getTweet);
 // name, username, text
 // json 형태로 입력 후 추가된 데이터까지 모두 json으로 출력
 
-router.post('/', tweetController.createTweet);
+router.post('/', validateTweet, tweetController.createTweet);
 // (req, res, next) => {
 //     const { text, name, username } = req.body;
 //     const tweet = {
@@ -87,7 +98,7 @@ router.post('/', tweetController.createTweet);
 // id, username, text
 // json 형태로 입력 후 변경된 데이터까지 모두 json으로 출력
 
-router.put('/:id', tweetController.updateTweet);
+router.put('/:id', validateTweet, tweetController.updateTweet);
 (req, res, next) => {
     const id = req.params.id;
     const text = req.body.text;
