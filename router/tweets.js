@@ -1,5 +1,5 @@
 import express from 'express';
-import * as tweetController from '../controler/tweet.js';
+import * as tweetController from '../controller/tweet.js';
 import { body } from 'express-validator';
 import { validate } from '../middleware/validator.js';
 
