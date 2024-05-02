@@ -11,15 +11,13 @@ export async function getTweets(req, res){
 // 하나의 트윗을 가져오는 함수
 export async function getTweet(req, res, next){
     const id = req.params.id;
-    const tweet = await tweetRepository.getAllByid(id);
+    const tweet = await tweetRepository.getById(id);
     if(tweet){
         res.status(200).json(tweet);
+    }else{
+        res.status(404).json({message:`${id}의 트윗이 없습니다`})
     }
-    else{
-        res.status(404).json({message: `${id}의 트윗이 없습니다.`})
-    };
 }
-
 
 // 트윗을 생성하는 함수
 export async function createTweet(req, res, next){
@@ -47,5 +45,5 @@ export async function updateTweet(req, res, next){
 export async function deleteTweet(req, res, next){
     const id = req.params.id;
     await tweetRepository.remove(id);
-    res.sendSatus(204);
+    res.sendStatus(204);
 }

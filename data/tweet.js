@@ -33,7 +33,7 @@ export async function getAllByUsername(username){
 
 
 // 글번호에 대한 트윗을 리턴
-export async function gatById(id){
+export async function getById(id){
     return tweets.find((tweet) => tweet.id === id);
 
 }

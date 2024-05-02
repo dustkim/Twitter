@@ -2,6 +2,7 @@ import express from 'express';
 import * as tweetController from '../controller/tweet.js';
 import { body } from 'express-validator';
 import { validate } from '../middleware/validator.js';
+import { isAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -40,7 +41,7 @@ let tweets = [
 // GET
 // http://localhost:8080/tweets?username=:username
 
-router.get('/', tweetController.getTweets);
+router.get('/', isAuth, tweetController.getTweets);
 // (req, res, next) => {
 //     const username = req.query.username;
 //     const data = username 
@@ -55,7 +56,7 @@ router.get('/', tweetController.getTweets);
 // GET
 // http://localhost:8080/tweets/:id
 
-router.get('/:id', tweetController.getTweet);
+router.get('/:id', isAuth, tweetController.getTweet);
 // (req, res, next) => {
 //     const id = req.params.id;
 //     const tweet = tweets.find((ID) => ID.id === id);
@@ -75,7 +76,7 @@ router.get('/:id', tweetController.getTweet);
 // name, username, text
 // json 형태로 입력 후 추가된 데이터까지 모두 json으로 출력
 
-router.post('/', validateTweet, tweetController.createTweet);
+router.post('/', validateTweet, isAuth, tweetController.createTweet);
 // (req, res, next) => {
 //     const { text, name, username } = req.body;
 //     const tweet = {
@@ -98,7 +99,7 @@ router.post('/', validateTweet, tweetController.createTweet);
 // id, username, text
 // json 형태로 입력 후 변경된 데이터까지 모두 json으로 출력
 
-router.put('/:id', validateTweet, tweetController.updateTweet);
+router.put('/:id', validateTweet, isAuth, tweetController.updateTweet);
 (req, res, next) => {
     const id = req.params.id;
     const text = req.body.text;
@@ -118,7 +119,7 @@ router.put('/:id', validateTweet, tweetController.updateTweet);
 // DELETE
 // http://localhost:8080/tweets/:id
 
-router.delete('/:id', tweetController.deleteTweet);
+router.delete('/:id', isAuth, tweetController.deleteTweet);
 (req, res, next) => {
     const id = req.params.id;
     tweets = tweets.filter((tweet) => tweet.id !== id);
