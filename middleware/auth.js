@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as authRepository from '../data/auth.js';
+import { config } from '../config.js';
 
 const AUTH_ERROR = {message: "인증에러"};
 
@@ -12,7 +13,7 @@ export const isAuth = async (req, res, next) => {
     }
     const token = authHeader.split(' ')[1];
     jwt.verify(
-        token, 'abcd1234%^&*', async(error, decoded) => {
+        token, config.jwt.secretkey, async(error, decoded) => {
             if(error){
                 console.log('에러2');
                 return res.status(401).json(AUTH_ERROR);
