@@ -1,54 +1,30 @@
-import SQ from 'sequelize';
-import { sequelize } from '../DB/database.js';
+import MongoDB from 'mongodb';
+import { getUsers } from '../db/database.js';
 
-const DataTypes = SQ.DataTypes;     // sequelize에서 사용하는 모든 데이터 형태를 사용하기 위함
-
-export const User = sequelize.define(
-    'user',     // orm은 테이블을 만들때 자동으로 s를 붙인다.
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            allowNull: false,
-            primaryKey: true
-        },
-        username: {
-            type: DataTypes.STRING(50),
-            allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING(150),
-            allowNull: false
-        },
-        name: {
-            type: DataTypes.STRING(50),
-            allowNull: false
-        },
-        email: {
-            type: DataTypes.STRING(150),
-            allowNull: false
-        },
-        url: DataTypes.STRING(1000)
-    },
-    { timestamps: false }
-);
+const ObjectID = MongoDB.ObjectId
 
 // 아이디(username) 중복검사
 export async function findByUsername(username){
-    return User.findOne({where: {username}});
+    return getUsers().find({username}).next().then(mapOptionalUser);
 }
 
 // id 중복검사
 export async function findById(id){
-    return User.findByPk(id);
+    return getUsers().find({_id: new ObjectID(id)}).next().then(mapOptionalUser);
 }
 
+// 회원가입
 export async function createUser(user){
-    return User.create(user).then((data) => data.dataValues.id)
+    return getUsers().insertOne(user).then((result) => console.log(result.insertedId.toString()));
 }
 
 
 // export async function login(username){
 //     return users.find((users) => users.username === username);
 // }
+
+
+function mapOptionalUser(user){
+    return user ? { ...user, id: user._id.toString() } : user;
+}
 
