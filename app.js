@@ -3,7 +3,7 @@ import morgan from "morgan";
 import tweetsRouter from './router/tweets.js';
 import authRouter from './router/auth.js';
 import { config } from './config.js';
-import { db } from './DB/database.js';
+import { sequelize } from './DB/database.js';
 
 
 const app = express();
@@ -20,5 +20,6 @@ app.use((req, res, next) => {
 
 // DB 연결 테스트!
 // db.getConnection().then(connection => console.log(connection))
-
-app.listen(config.host.port);
+sequelize.sync().then(() => {
+    app.listen(config.host.port);
+});
