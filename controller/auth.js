@@ -33,6 +33,7 @@ export async function login(req, res, next){
     const { username, password } = req.body;
     // const user = await authRepository.login(username);
     const user = await authRepository.findByUsername(username);
+    console.log(user)
     if(!user){
         return res.status(401).json({message: `아이디를 찾을 수 없습니다.`})
     }
